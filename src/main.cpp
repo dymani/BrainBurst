@@ -1,18 +1,23 @@
-#include <SFML/Graphics.hpp>
+// main.cpp
+#include <LuaBridge/LuaBridge.h>
+#include <iostream>
+extern "C" {
+# include "lua/lua.h"
+# include "lua/lauxlib.h"
+# include "lua/lualib.h"
+}
 
+using namespace luabridge;
 int main() {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-    while(window.isOpen()) {
-        sf::Event event;
-        while(window.pollEvent(event)) {
-            if(event.type == sf::Event::Closed)
-                window.close();
-        }
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
-    return 0;
+  lua_State* L = luaL_newstate();
+  luaL_dofile(L, "script.lua");
+  luaL_openlibs(L);
+  lua_pcall(L, 0, 0, 0);
+  LuaRef s = getGlobal(L, "testString");
+  LuaRef n = getGlobal(L, "number");
+  std::string luaString = s.cast<std::string>();
+  int answer = n.cast<int>();
+  std::cout << luaString << std::endl;
+  std::cout << "And here's our number:" << answer << std::endl;
+  system("PAUSE");
 }
