@@ -248,3 +248,5 @@ ModelManifest.xml
 /dependencies
 /include/lua
 /include/LuaBridge
+/include/Box2D
+/include/rapidjson

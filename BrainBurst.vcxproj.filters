@@ -392,5 +392,8 @@
     <ClInclude Include="include\LuaBridge\RefCountedPtr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\BrainBurst1\include\BB\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
