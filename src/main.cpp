@@ -1,3 +1,16 @@
+//#include "BB/Game.h"
+//#include "BB/GameState/GameStateInit.h"
+//
+//int main() {
+//  bb::Game game;
+//  game.pushState(new bb::GameStateInit{game});
+//  int returnVal = game.run();
+//#if _DEBUG
+//  system("PAUSE");
+//#endif
+//  return returnVal;
+//}
+
 // main.cpp
 #include <LuaBridge/LuaBridge.h>
 #include <iostream>
@@ -10,14 +23,11 @@ extern "C" {
 using namespace luabridge;
 int main() {
   lua_State* L = luaL_newstate();
-  luaL_dofile(L, "script.lua");
+  luaL_dofile(L, "assets/data/gameStates/init.lua");
   luaL_openlibs(L);
   lua_pcall(L, 0, 0, 0);
-  LuaRef s = getGlobal(L, "testString");
-  LuaRef n = getGlobal(L, "number");
+  LuaRef s = getGlobal(L, "texture");
   std::string luaString = s.cast<std::string>();
-  int answer = n.cast<int>();
   std::cout << luaString << std::endl;
-  std::cout << "And here's our number:" << answer << std::endl;
   system("PAUSE");
 }
