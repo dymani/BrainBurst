@@ -175,6 +175,15 @@
     <ClCompile Include="include\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="include\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
     <ClCompile Include="include\Box2D\Rope\b2Rope.cpp" />
+    <ClCompile Include="src\BB\Game.cpp" />
+    <ClCompile Include="src\BB\GameState\GameStateInit.cpp" />
+    <ClCompile Include="src\BB\GameState\GameStateSplash.cpp" />
+    <ClCompile Include="src\BB\GameState\GameStateTitle.cpp" />
+    <ClCompile Include="src\BB\Handler\AudioHandler.cpp" />
+    <ClCompile Include="src\BB\Handler\GuiHandler.cpp" />
+    <ClCompile Include="src\BB\Handler\Gui\Button.cpp" />
+    <ClCompile Include="src\BB\Handler\ResourceHandler.cpp" />
+    <ClCompile Include="src\BB\Handler\WindowHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +202,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\BrainBurst1\include\BB\Game.h" />
+    <ClInclude Include="include\BB\Game.h" />
+    <ClInclude Include="include\BB\GameState\GameStateInit.h" />
+    <ClInclude Include="include\BB\GameState\GameStateSplash.h" />
+    <ClInclude Include="include\BB\GameState\GameStateTitle.h" />
+    <ClInclude Include="include\BB\GameState\IGameState.h" />
+    <ClInclude Include="include\BB\Handler\AudioHandler.h" />
+    <ClInclude Include="include\BB\Handler\GuiHandler.h" />
+    <ClInclude Include="include\BB\Handler\Gui\Button.h" />
+    <ClInclude Include="include\BB\Handler\Gui\IGuiElement.h" />
+    <ClInclude Include="include\BB\Handler\Gui\IGuiElementData.h" />
+    <ClInclude Include="include\BB\Handler\LogHandler.h" />
+    <ClInclude Include="include\BB\Handler\ResourceHandler.h" />
+    <ClInclude Include="include\BB\Handler\WindowHandler.h" />
     <ClInclude Include="include\Box2D\Box2D.h" />
     <ClInclude Include="include\Box2D\Collision\b2BroadPhase.h" />
     <ClInclude Include="include\Box2D\Collision\b2Collision.h" />
