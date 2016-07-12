@@ -4,37 +4,64 @@
 #include "BB/Handler/Gui/Button.h"
 
 namespace bb {
-  GuiHandler::GuiHandler(WindowHandler& windowHandler, ResourceHandler& resourceHandler)
-    : m_windowHandler(windowHandler), m_resourceHandler(resourceHandler) {
+  GuiHandler::GuiHandler(WindowHandler& windowHandler, ResourceHandler& resourceHandler,
+    luabridge::lua_State* L) : m_windowHandler(windowHandler), m_resourceHandler(resourceHandler) {
+    this->L = L;
+
+    m_elementHandlers["button"] = std::unique_ptr<ButtonHandler>(new ButtonHandler(m_resourceHandler,
+      m_windowHandler));
   }
 
-  void GuiHandler::load(luabridge::LuaRef& luaGui) {
+  void GuiHandler::load() {
     using namespace luabridge;
-    LuaRef luaButton = luaGui[1];
-    Button* button = new Button(m_resourceHandler, m_windowHandler, luaButton);
-    m_elements[0] = std::unique_ptr<IGuiElement>(button);
+    assert(!luaL_loadfile(L, "assets/data/gui.lua") && !lua_pcall(L, 0, 0, 0));
+
+    luabridge::LuaRef luaButtons = getGlobal(L, "buttons");
+    assert(luaButtons.isTable());
+
+    for (int i = 1; i <= luaButtons.length(); i++) {
+      luabridge::LuaRef luaButton = luaButtons[i];
+      assert(luaButton.isTable());
+      m_elementHandlers["button"]->addElementStyle(luaButton);
+    }
+  }
+
+  void GuiHandler::loadElements(luabridge::LuaRef& luaElements) {
+    assert(luaElements.isTable());
+    for (int i = 1; i <= luaElements.length(); i++) {
+      luabridge::LuaRef luaElement = luaElements[i];
+      assert(luaElement.isTable());
+      luabridge::LuaRef luaId = luaElement["id"];
+      luabridge::LuaRef luaType = luaElement["type"];
+      assert(luaId.isNumber());
+      assert(luaType.isString());
+      auto* element = m_elementHandlers[luaType.cast<std::string>()]->addElement(luaElement);
+      m_elements[luaId.cast<int>()] = std::unique_ptr<IGuiElement>(element);
+    }
   }
 
   void GuiHandler::handleInput(sf::Event& windowEvent) {
+    bool isActive;
     for (auto& e : m_elements) {
-      if (e.second->handleInput(m_windowHandler.getWindow(), windowEvent))
+      isActive = m_elementHandlers[e.second->m_type]->handleInput(windowEvent, e.second.get());
+      if (isActive)
         break;
     }
   }
 
   int GuiHandler::update() {
-    int update;
+    bool isActive;
     for (auto& e : m_elements) {
-      update = e.second->update();
-      if (update != -1)
-        return update;
+      isActive = m_elementHandlers[e.second->m_type]->update(e.second.get());
+      if (isActive)
+        return e.first;
     }
     return -1;
   }
 
   void GuiHandler::draw() {
     for (auto& e : m_elements) {
-      e.second->draw(m_windowHandler.getWindow());
+      m_elementHandlers[e.second->m_type]->draw(e.second.get());
     }
   }
 }

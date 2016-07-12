@@ -830,12 +830,6 @@
     <ClInclude Include="include\BB\Handler\Gui\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\BB\Handler\Gui\IGuiElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BB\Handler\Gui\IGuiElementData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\BB\Handler\AudioHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -843,6 +837,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BB\GameState\GameStateTitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BB\Handler\Gui\IGuiElementHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BB\Handler\Gui\IGuiElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

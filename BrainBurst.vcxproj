@@ -210,8 +210,8 @@
     <ClInclude Include="include\BB\Handler\AudioHandler.h" />
     <ClInclude Include="include\BB\Handler\GuiHandler.h" />
     <ClInclude Include="include\BB\Handler\Gui\Button.h" />
+    <ClInclude Include="include\BB\Handler\Gui\IGuiElementHandler.h" />
     <ClInclude Include="include\BB\Handler\Gui\IGuiElement.h" />
-    <ClInclude Include="include\BB\Handler\Gui\IGuiElementData.h" />
     <ClInclude Include="include\BB\Handler\LogHandler.h" />
     <ClInclude Include="include\BB\Handler\ResourceHandler.h" />
     <ClInclude Include="include\BB\Handler\WindowHandler.h" />

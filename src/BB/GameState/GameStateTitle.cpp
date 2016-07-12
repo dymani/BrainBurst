@@ -13,7 +13,8 @@ namespace bb {
 
     m_windowHandler->getWindow().setView(m_windowHandler->getWindow().getDefaultView());
     m_guiHandler = std::unique_ptr<GuiHandler>(new GuiHandler(*m_windowHandler.get(),
-      *m_resourceHandler.get()));
+      *m_resourceHandler.get(), L));
+    m_guiHandler->load();
 
     m_state = RUNNING;
 
@@ -28,18 +29,8 @@ namespace bb {
       float(m_windowHandler->getWindow().getSize().x) / float(m_background.getTexture()->getSize().x),
       float(m_windowHandler->getWindow().getSize().y) / float(m_background.getTexture()->getSize().y));
 
-    luabridge::LuaRef luaCallbacks = getGlobal(L, "callbacks");
-    assert(luaCallbacks.isTable());
-    for (int i = 1; i <= luaCallbacks.length(); i++) {
-      luabridge::LuaRef luaCallback = luaCallbacks[i];
-      assert(luaCallback.isTable());
-      assert(luaCallback["id"].isNumber());
-      assert(luaCallback["state"].isNumber());
-      m_callbacks[luaCallback["id"].cast<int>()] = luaCallback["state"].cast<int>();
-    }
-
     luabridge::LuaRef luaGui = getGlobal(L, "gui");
-    m_guiHandler->load(luaGui);
+    m_guiHandler->loadElements(luaGui);
   }
 
   void GameStateTitle::handleInput() {
@@ -69,7 +60,7 @@ namespace bb {
   bool GameStateTitle::update() {
     int i = m_guiHandler->update();
     if (i != -1) {
-      m_state = State(m_callbacks[i]);
+      m_state = State(i);
     }
     switch (m_state) {
       case RUNNING:

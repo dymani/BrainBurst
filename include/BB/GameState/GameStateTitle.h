@@ -31,7 +31,6 @@ namespace bb {
       RUNNING, QUIT, GAME, RELOAD
     } m_state;
     sf::Sprite m_background;
-    std::map<int, int> m_callbacks;
   };
 }
 

@@ -9,6 +9,7 @@ extern "C" {
 }
 #include <memory>
 #include "BB/Handler/Gui/IGuiElement.h"
+#include "BB/Handler/Gui/IGuiElementHandler.h"
 
 namespace bb {
   class WindowHandler;
@@ -16,14 +17,17 @@ namespace bb {
 
   class GuiHandler {
   public:
-    GuiHandler(WindowHandler& windowHandler, ResourceHandler& resourceHandler);
-    void load(luabridge::LuaRef& luaGui);
+    GuiHandler(WindowHandler& windowHandler, ResourceHandler& resourceHandler, luabridge::lua_State* L);
+    void load();
+    void loadElements(luabridge::LuaRef& luaElements);
     void handleInput(sf::Event& windowEvent);
     int update();
     void draw();
   private:
     WindowHandler& m_windowHandler;
     ResourceHandler& m_resourceHandler;
+    luabridge::lua_State* L;
+    std::map<std::string, std::unique_ptr<IGuiElementHandler>> m_elementHandlers;
     std::map<int, std::unique_ptr<IGuiElement>> m_elements;
   };
 }
