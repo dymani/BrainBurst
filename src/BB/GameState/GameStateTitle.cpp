@@ -29,6 +29,28 @@ namespace bb {
       float(m_windowHandler->getWindow().getSize().x) / float(m_background.getTexture()->getSize().x),
       float(m_windowHandler->getWindow().getSize().y) / float(m_background.getTexture()->getSize().y));
 
+    luabridge::LuaRef luaText = getGlobal(L, "text");
+    assert(luaText.isTable());
+    luabridge::LuaRef luaString = luaText["string"];
+    luabridge::LuaRef luaSize = luaText["size"];
+    luabridge::LuaRef luaColor = luaText["color"];
+    luabridge::LuaRef luaFont = luaText["font"];
+    assert(luaString.isString());
+    assert(luaSize.isNumber());
+    assert(luaColor.isTable());
+    assert(luaColor[1].isNumber());
+    assert(luaColor[2].isNumber());
+    assert(luaColor[3].isNumber());
+    assert(luaFont.isString());
+    m_text.setString(luaString.cast<std::string>());
+    auto size = unsigned int(luaSize.cast<float>() * m_background.getScale().y);
+    m_text.setCharacterSize(size);
+    m_text.setColor({luaColor[1].cast<sf::Uint8>(), luaColor[2].cast<sf::Uint8>(),
+      luaColor[3].cast<sf::Uint8>()});
+    m_text.setFont(m_resourceHandler->getFont(luaFont.cast<std::string>()));
+    m_text.setPosition({float(size) / 2.0f, m_windowHandler->getWindow().getSize().y - float(size) / 2.0f
+      - m_text.getGlobalBounds().height});
+
     luabridge::LuaRef luaGui = getGlobal(L, "gui");
     m_guiHandler->loadElements(luaGui);
   }
@@ -83,6 +105,7 @@ namespace bb {
   void GameStateTitle::draw(const double dt) {
     m_windowHandler->getWindow().clear(sf::Color::Black);
     m_windowHandler->getWindow().draw(m_background);
+    m_windowHandler->getWindow().draw(m_text);
     m_guiHandler->draw();
     m_windowHandler->getWindow().display();
   }

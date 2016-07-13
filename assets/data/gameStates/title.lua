@@ -1,6 +1,11 @@
 background = "title"
 
-text = "© dymani 2015-2016"
+text = {
+    string = "dymani 2015-2016",
+    size = 50,
+    color = {255, 255, 255},
+    font = "default"
+}
 
 gui = {
     {

@@ -31,6 +31,7 @@ namespace bb {
       RUNNING, QUIT, GAME, RELOAD
     } m_state;
     sf::Sprite m_background;
+    sf::Text m_text;
   };
 }
 
