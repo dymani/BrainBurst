@@ -176,6 +176,7 @@
     <ClCompile Include="include\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
     <ClCompile Include="include\Box2D\Rope\b2Rope.cpp" />
     <ClCompile Include="src\BB\Game.cpp" />
+    <ClCompile Include="src\BB\GameState\GameStateGame.cpp" />
     <ClCompile Include="src\BB\GameState\GameStateInit.cpp" />
     <ClCompile Include="src\BB\GameState\GameStateSplash.cpp" />
     <ClCompile Include="src\BB\GameState\GameStateTitle.cpp" />
@@ -184,6 +185,10 @@
     <ClCompile Include="src\BB\Handler\Gui\Button.cpp" />
     <ClCompile Include="src\BB\Handler\ResourceHandler.cpp" />
     <ClCompile Include="src\BB\Handler\WindowHandler.cpp" />
+    <ClCompile Include="src\BB\World\Entity.cpp" />
+    <ClCompile Include="src\BB\World\EntityTemplate.cpp" />
+    <ClCompile Include="src\BB\World\System\PhysicsSystem.cpp" />
+    <ClCompile Include="src\BB\World\World.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +208,7 @@
   <ItemGroup>
     <ClInclude Include="..\BrainBurst1\include\BB\Game.h" />
     <ClInclude Include="include\BB\Game.h" />
+    <ClInclude Include="include\BB\GameState\GameStateGame.h" />
     <ClInclude Include="include\BB\GameState\GameStateInit.h" />
     <ClInclude Include="include\BB\GameState\GameStateSplash.h" />
     <ClInclude Include="include\BB\GameState\GameStateTitle.h" />
@@ -215,6 +221,13 @@
     <ClInclude Include="include\BB\Handler\LogHandler.h" />
     <ClInclude Include="include\BB\Handler\ResourceHandler.h" />
     <ClInclude Include="include\BB\Handler\WindowHandler.h" />
+    <ClInclude Include="include\BB\World\Component\IComponent.h" />
+    <ClInclude Include="include\BB\World\Component\PhysicsComponent.h" />
+    <ClInclude Include="include\BB\World\Entity.h" />
+    <ClInclude Include="include\BB\World\EntityTemplate.h" />
+    <ClInclude Include="include\BB\World\System\ISystem.h" />
+    <ClInclude Include="include\BB\World\System\PhysicsSystem.h" />
+    <ClInclude Include="include\BB\World\World.h" />
     <ClInclude Include="include\Box2D\Box2D.h" />
     <ClInclude Include="include\Box2D\Collision\b2BroadPhase.h" />
     <ClInclude Include="include\Box2D\Collision\b2Collision.h" />

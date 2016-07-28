@@ -1,6 +1,6 @@
 #include "BB/GameState/GameStateTitle.h"
 #include "BB/Game.h"
-//#include "BB/GameState/GameStateGame.h"
+#include "BB/GameState/GameStateGame.h"
 #include "BB/GameState/GameStateInit.h"
 #include "BB/Handler/Gui/Button.h"
 
@@ -90,10 +90,8 @@ namespace bb {
       case QUIT:
         return false;
       case GAME:
-        /*m_game.changeState(new GameStateGame(m_game, m_resourceHandler.release(),
-          m_windowHandler.release(), L));*/
-        std::cout << "Game.\n";
-        m_state = RUNNING;
+        m_game.changeState(new GameStateGame(m_game, m_resourceHandler.release(),
+          m_windowHandler.release(), L));
         break;
       case RELOAD:
         m_game.changeState(new GameStateInit(m_game));
