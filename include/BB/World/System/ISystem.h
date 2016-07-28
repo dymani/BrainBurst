@@ -24,7 +24,9 @@ namespace bb {
     virtual IComponent* createComponent(IComponent* component, rapidjson::Value& jsonE, int id = -1) = 0;
     virtual void addComponent(IComponent* component, int id) = 0;
     virtual void removeComponent(int id) = 0;
+    virtual void handleInput(sf::Event& windowEvent) = 0;
     virtual bool update() = 0;
+    virtual void draw(const double dt) = 0;
   protected:
     std::map<int, std::unique_ptr<IComponent>> m_components;
   };

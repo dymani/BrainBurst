@@ -12,7 +12,7 @@ namespace bb {
       assert(luaType.isString());
       auto type = luaType.cast<std::string>();
       if (type == "Physics") {
-        component = m_world.getSystem<PhysicsComponent>()->createTemplate(luaComponent);
+        component = m_world.getField().getSystem<PhysicsComponent>()->createTemplate(luaComponent);
         m_components.insert(std::make_pair(getType<PhysicsComponent>(),
           std::unique_ptr<IComponent>(component)));
       }
@@ -31,14 +31,14 @@ namespace bb {
       int id;
       do
         id = std::rand() % 1000;
-      while (m_world.getEntity(id) != nullptr);
+      while (m_world.getField().getEntity(id) != nullptr);
       entity = new Entity(m_world, id);
     }
     IComponent* c = nullptr;
     for (auto& component : m_components) {
       if (component.second->TYPE == getType<PhysicsComponent>())
-        c = m_world.getSystem<PhysicsComponent>()->createComponent(component.second.get(), jsonE,
-          entity->ID);
+        c = m_world.getField().getSystem<PhysicsComponent>()->createComponent(component.second.get(),
+          jsonE, entity->ID);
       else
         c = nullptr;
       assert(c != nullptr);

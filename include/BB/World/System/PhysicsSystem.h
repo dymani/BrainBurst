@@ -13,7 +13,9 @@ namespace bb {
     IComponent* createComponent(IComponent* component, rapidjson::Value& jsonE, int id = -1);
     void addComponent(IComponent* component, int id);
     void removeComponent(int id);
+    void handleInput(sf::Event& windowEvent);
     bool update();
+    void draw(const double dt);
   private:
   };
 }

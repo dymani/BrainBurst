@@ -1,22 +1,19 @@
 #include "BB/World/World.h"
 #include "BB/Handler/ResourceHandler.h"
 #include "BB/Handler/WindowHandler.h"
-#include "BB/World/System/PhysicsSystem.h"
-#include "BB/World/Component/PhysicsComponent.h"
 
 namespace bb {
   World::World(ResourceHandler& resourceHandler, WindowHandler& windowHandler, luabridge::lua_State* L)
     : m_resourceHandler(resourceHandler), m_windowHandler(windowHandler) {
     this->L = L;
     std::srand(unsigned int(std::time(0)));
+    m_field = std::unique_ptr<Field>(new Field(m_resourceHandler, m_windowHandler, L, *this));
   }
 
-  void World::init() { //load world assets and templates
-    m_systems.insert(std::make_pair(getType<PhysicsComponent>(),
-      std::unique_ptr<ISystem>(new PhysicsSystem())));
+  void World::init() {
+    m_field->init();
 
     using namespace luabridge;
-
     assert(!luaL_loadfile(L, "assets/data/world/world.lua") && !lua_pcall(L, 0, 0, 0));
 
     luabridge::LuaRef luaEntityTemplates = getGlobal(L, "entityTemplates");
@@ -34,71 +31,29 @@ namespace bb {
     }
   }
 
-  void World::load(std::string name) { //load world save contents
-    std::string file = "saves/" + name + ".json";
-    std::ifstream fin(file);
-    assert(!fin.fail());
-    std::stringstream strStream;
-    strStream << fin.rdbuf();
-    std::string fileString = strStream.str();
-    fin.close();
-    using namespace rapidjson;
-    Document document;
-    assert(!document.Parse<0>(fileString.c_str()).HasParseError());
-    Value& jsonEntities = document["entities"];
-    for (SizeType i = 0; i < jsonEntities.Size(); i++) {
-      Value& jsonEntity = jsonEntities[i];
-      Value& jsonName = jsonEntity["name"];
-      assert(m_entityTemplates.find(jsonName.GetString()) != m_entityTemplates.end());
-      Entity* entity = m_entityTemplates[jsonName.GetString()]->createEntity(jsonEntity);
-      m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
-    }
+  void World::load(std::string name, std::string field) {
+    m_field->load(name, field);
   }
 
   void World::handleInput(sf::Event& windowEvent) {
-    if (windowEvent.type == sf::Event::KeyPressed) {
-      if (windowEvent.key.code == sf::Keyboard::J) {
-        if (!m_entities.empty())
-          m_entities.begin()->second->markDirty();
-      }
-      else if (windowEvent.key.code == sf::Keyboard::K) {
-        EntityJsonGenerator json;
-        json.add("x", 10).add("y", 11);
-        auto* entity = m_entityTemplates["test1"]->createEntity(json.generateJson().Move());
-        m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
-      }
-    }
+    m_field->handleInput(windowEvent);
   }
 
   bool World::update() {
-    bool willQuit = false;
-    for (auto& system : m_systems) {
-      if (system.second->update())
-        willQuit = true;
-    }
-    for (auto it = m_entities.cbegin(); it != m_entities.cend();) {
-      if (it->second->isDirty())
-        m_entities.erase(it++);
-      else
-        ++it;
-    }
+    bool willQuit = m_field->update();
     return willQuit;
   }
 
   void World::draw(const double dt) {
+    m_field->draw(dt);
   }
 
-  Entity* World::getEntity(int id) {
-    if (m_entities.find(id) != m_entities.end())
-      return m_entities[id].get();
+  Field& World::getField() {
+    return *(m_field.get());
+  }
+  EntityTemplate* World::getEntityTemplate(std::string name) {
+    if (m_entityTemplates.find(name) != m_entityTemplates.end())
+      return m_entityTemplates[name].get();
     return nullptr;
-  }
-
-  void World::deleteEntity(int id) {
-    m_entities[id]->markDirty();
-  }
-
-  ISystem* World::getSystem(std::type_index componentType) {
-    return m_systems[componentType].get();
   }
 }

@@ -17,7 +17,7 @@ namespace bb {
 
     m_world->init();
 
-    m_world->load("test");
+    m_world->load("test", "01");
   }
 
   void GameStateGame::handleInput() {

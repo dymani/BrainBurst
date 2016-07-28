@@ -51,6 +51,9 @@ namespace bb {
     m_components.erase(id);
   }
 
+  void PhysicsSystem::handleInput(sf::Event& windowEvent) {
+  }
+
   bool PhysicsSystem::update() {
     PhysicsComponent* c;
     for (auto& component : m_components) {
@@ -60,5 +63,8 @@ namespace bb {
     }
     std::cout << "-----------" << std::endl;
     return false;
+  }
+
+  void PhysicsSystem::draw(const double dt) {
   }
 }

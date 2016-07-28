@@ -187,6 +187,7 @@
     <ClCompile Include="src\BB\Handler\WindowHandler.cpp" />
     <ClCompile Include="src\BB\World\Entity.cpp" />
     <ClCompile Include="src\BB\World\EntityTemplate.cpp" />
+    <ClCompile Include="src\BB\World\Field.cpp" />
     <ClCompile Include="src\BB\World\System\PhysicsSystem.cpp" />
     <ClCompile Include="src\BB\World\World.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="include\BB\World\Component\PhysicsComponent.h" />
     <ClInclude Include="include\BB\World\Entity.h" />
     <ClInclude Include="include\BB\World\EntityTemplate.h" />
+    <ClInclude Include="include\BB\World\Field.h" />
     <ClInclude Include="include\BB\World\System\ISystem.h" />
     <ClInclude Include="include\BB\World\System\PhysicsSystem.h" />
     <ClInclude Include="include\BB\World\World.h" />

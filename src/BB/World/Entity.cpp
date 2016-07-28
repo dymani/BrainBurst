@@ -7,13 +7,13 @@ namespace bb {
 
   Entity::~Entity() {
     for (auto& component : m_componentList) {
-      m_world.getSystem(component)->removeComponent(ID);
+      m_world.getField().getSystem(component)->removeComponent(ID);
     }
   }
 
   void Entity::addComponent(IComponent* component) {
     m_componentList.push_back(component->TYPE);
-    m_world.getSystem(component->TYPE)->addComponent(component, ID);
+    m_world.getField().getSystem(component->TYPE)->addComponent(component, ID);
   }
 
   void Entity::removeComponent(std::type_index type) {
@@ -23,7 +23,7 @@ namespace bb {
       else
         i++;
     }
-    m_world.getSystem(type)->removeComponent(ID);
+    m_world.getField().getSystem(type)->removeComponent(ID);
   }
 
   void Entity::markDirty() {
