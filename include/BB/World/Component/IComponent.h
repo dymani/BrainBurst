@@ -8,7 +8,8 @@ namespace bb {
   public:
     const int ID;
     const std::type_index TYPE;
-    IComponent(int id, std::type_index type) : ID(id), TYPE(type) {
+		const bool IS_VIRTUAL;
+    IComponent(int id, std::type_index type) : ID(id), TYPE(type), IS_VIRTUAL(ID == -1) {
     }
     virtual ~IComponent() {
     }

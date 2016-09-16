@@ -1,6 +1,6 @@
 {
     "entities":[
         {"name":"test1", "id":0, "x":3, "y":4},
-        {"name":"test2", "id":1, "x":4, "y":5}
+        {"name":"test2", "id":1, "x":5, "y":5}
     ]
 }

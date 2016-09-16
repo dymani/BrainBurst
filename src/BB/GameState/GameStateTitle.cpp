@@ -45,7 +45,7 @@ namespace bb {
     m_text.setString(luaString.cast<std::string>());
     auto size = unsigned int(luaSize.cast<float>() * m_background.getScale().y);
     m_text.setCharacterSize(size);
-    m_text.setColor({luaColor[1].cast<sf::Uint8>(), luaColor[2].cast<sf::Uint8>(),
+    m_text.setFillColor({luaColor[1].cast<sf::Uint8>(), luaColor[2].cast<sf::Uint8>(),
       luaColor[3].cast<sf::Uint8>()});
     m_text.setFont(m_resourceHandler->getFont(luaFont.cast<std::string>()));
     m_text.setPosition({float(size) / 2.0f, m_windowHandler->getWindow().getSize().y - float(size) / 2.0f

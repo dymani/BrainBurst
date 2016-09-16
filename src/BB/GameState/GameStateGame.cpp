@@ -1,6 +1,7 @@
 #include "BB/GameState/GameStateGame.h"
 #include "BB/Game.h"
 #include "BB/GameState/GameStateInit.h"
+#include "BB/GameState/GameStateTitle.h"
 
 namespace bb {
   GameStateGame::GameStateGame(Game& game, ResourceHandler* resourceHandler, WindowHandler* windowHandler,
@@ -48,9 +49,11 @@ namespace bb {
       case RUNNING:
         break;
       case QUIT:
-        return false;
+				m_game.changeState(new GameStateTitle(m_game, m_resourceHandler.release(), m_windowHandler.release(),
+					L));
+				break;
       case RELOAD:
-        m_game.changeState(new GameStateInit(m_game));
+				m_game.changeState(new GameStateInit(m_game));
         break;
     }
     return true;

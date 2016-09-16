@@ -3,7 +3,6 @@
 
 #include <time.h>
 #include <stack>
-#include <windows.h>
 #include <cassert>
 
 namespace bb {

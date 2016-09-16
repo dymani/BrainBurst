@@ -12,6 +12,7 @@ extern "C" {
 #include <lua/lauxlib.h>
 #include <lua/lualib.h>
 }
+#include <Box2D/Box2D.h>
 #include "BB/World/System/ISystem.h"
 #include "BB/World/Entity.h"
 
@@ -36,6 +37,7 @@ namespace bb {
     ISystem* getSystem() {
       return getSystem(std::type_index(typeid(T)));
     }
+		b2World& getBox2DWorld();
   private:
     ResourceHandler& m_resourceHandler;
     WindowHandler& m_windowHandler;
@@ -43,7 +45,9 @@ namespace bb {
     World& m_world;
     std::unordered_map<std::type_index, std::unique_ptr<ISystem>> m_systems;
     std::map<int, std::unique_ptr<Entity>> m_entities;
-  };
+		b2World m_box2DWorld;
+		b2Body* m_ground;
+	};
 }
 
 #endif

@@ -11,13 +11,6 @@ namespace bb {
   }
 
   int Game::run() {
-  #if _DEBUG
-    HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, SW_SHOW);
-  #else
-    HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, SW_HIDE);
-  #endif
     clock_t previous, lag, current, elapsed;
     previous = clock();
     lag = 0;

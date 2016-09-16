@@ -6,86 +6,103 @@
 #include "BB/World/Component/PhysicsComponent.h"
 
 namespace bb {
-  Field::Field(ResourceHandler& resourceHandler, WindowHandler& windowHandler, luabridge::lua_State* L,
-    World& world) : m_resourceHandler(resourceHandler), m_windowHandler(windowHandler), m_world(world) {
-    this->L = L;
-  }
+	Field::Field(ResourceHandler& resourceHandler, WindowHandler& windowHandler, luabridge::lua_State* L,
+		World& world) : m_resourceHandler(resourceHandler), m_windowHandler(windowHandler), m_world(world),
+		m_box2DWorld(b2Vec2(0.0f, -20.0f)) {
+		this->L = L;
+	}
 
-  void Field::init() {
-    m_systems.insert(std::make_pair(getType<PhysicsComponent>(),
-      std::unique_ptr<ISystem>(new PhysicsSystem())));
-  }
+	void Field::init() {
+		m_systems.insert(std::make_pair(getType<PhysicsComponent>(),
+			std::unique_ptr<ISystem>(new PhysicsSystem(m_world))));
+	}
 
-  void Field::load(std::string name, std::string field) {
-    std::string file = "saves/" + name + "/" + field + ".json";
-    std::ifstream fin(file);
-    assert(!fin.fail());
-    std::stringstream strStream;
-    strStream << fin.rdbuf();
-    std::string fileString = strStream.str();
-    fin.close();
-    using namespace rapidjson;
-    Document document;
-    assert(!document.Parse<0>(fileString.c_str()).HasParseError());
-    Value& jsonEntities = document["entities"];
-    for (SizeType i = 0; i < jsonEntities.Size(); i++) {
-      Value& jsonEntity = jsonEntities[i];
-      Value& jsonName = jsonEntity["name"];
-      auto* temp = m_world.getEntityTemplate(jsonName.GetString());
-      assert(temp != nullptr);
-      Entity* entity = temp->createEntity(jsonEntity);
-      m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
-    }
-  }
+	void Field::load(std::string name, std::string field) {
+		std::string file = "saves/" + name + "/" + field + ".json";
+		std::ifstream fin(file);
+		assert(!fin.fail());
+		std::stringstream strStream;
+		strStream << fin.rdbuf();
+		std::string fileString = strStream.str();
+		fin.close();
+		using namespace rapidjson;
+		Document document;
+		assert(!document.Parse<0>(fileString.c_str()).HasParseError());
+		Value& jsonEntities = document["entities"];
+		for (SizeType i = 0; i < jsonEntities.Size(); i++) {
+			Value& jsonEntity = jsonEntities[i];
+			Value& jsonName = jsonEntity["name"];
+			auto* temp = m_world.getEntityTemplate(jsonName.GetString());
+			assert(temp != nullptr);
+			Entity* entity = temp->createEntity(jsonEntity);
+			m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
+		}
 
-  void Field::handleInput(sf::Event& windowEvent) {
-    if (windowEvent.type == sf::Event::KeyPressed) {
-      if (windowEvent.key.code == sf::Keyboard::J) {
-        if (!m_entities.empty())
-          m_entities.begin()->second->markDirty();
-      }
-      else if (windowEvent.key.code == sf::Keyboard::K) {
-        EntityJsonGenerator json;
-        json.add("x", 10).add("y", 11);
-        auto* temp = m_world.getEntityTemplate("test1");
-        auto* entity = temp->createEntity(json.generateJson().Move());
-        m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
-      }
-    }
-  }
+		b2BodyDef groundBodyDef;
+		groundBodyDef.position.Set(0.0f, -1.0f);
+		m_ground = m_box2DWorld.CreateBody(&groundBodyDef);
 
-  bool Field::update() {
-    bool willQuit = false;
-    for (auto& system : m_systems) {
-      if (system.second->update())
-        willQuit = true;
-    }
-    for (auto it = m_entities.cbegin(); it != m_entities.cend();) {
-      if (it->second->isDirty())
-        m_entities.erase(it++);
-      else
-        ++it;
-    }
-    return willQuit;
-  }
+		b2PolygonShape groundBox;
+		groundBox.SetAsBox(20.0f, 1.0f);
+		b2FixtureDef groundFix;
+		groundFix.friction = 0.6f;
+		groundFix.shape = &groundBox;
+		groundFix.density = 0.0f;
+		m_ground->CreateFixture(&groundFix);
+	}
 
-  void Field::draw(const double dt) {
-    for (auto& system : m_systems) {
-      system.second->draw(dt);
-    }
-  }
+	void Field::handleInput(sf::Event& windowEvent) {
+		if (windowEvent.type == sf::Event::KeyPressed) {
+			if (windowEvent.key.code == sf::Keyboard::J) {
+				if (!m_entities.empty())
+					m_entities.begin()->second->markDirty();
+			}
+			else if (windowEvent.key.code == sf::Keyboard::K) {
+				EntityJsonGenerator json;
+				json.add("x", 10).add("y", 11);
+				auto* temp = m_world.getEntityTemplate("test1");
+				auto* entity = temp->createEntity(json.generateJson().Move());
+				m_entities.insert(std::make_pair(entity->ID, std::unique_ptr<Entity>(entity)));
+			}
+		}
+	}
 
-  Entity* Field::getEntity(int id) {
-    if (m_entities.find(id) != m_entities.end())
-      return m_entities[id].get();
-    return nullptr;
-  }
+	bool Field::update() {
+		bool willQuit = false;
+		for (auto& system : m_systems) {
+			if (system.second->update())
+				willQuit = true;
+		}
+		for (auto it = m_entities.cbegin(); it != m_entities.cend();) {
+			if (it->second->isDirty())
+				m_entities.erase(it++);
+			else
+				++it;
+		}
+		return willQuit;
+	}
 
-  void Field::deleteEntity(int id) {
-    m_entities[id]->markDirty();
-  }
+	void Field::draw(const double dt) {
+		for (auto& system : m_systems) {
+			system.second->draw(dt);
+		}
+	}
 
-  ISystem* Field::getSystem(std::type_index componentType) {
-    return m_systems[componentType].get();
-  }
+	Entity* Field::getEntity(int id) {
+		if (m_entities.find(id) != m_entities.end())
+			return m_entities[id].get();
+		return nullptr;
+	}
+
+	void Field::deleteEntity(int id) {
+		m_entities[id]->markDirty();
+	}
+
+	ISystem* Field::getSystem(std::type_index componentType) {
+		return m_systems[componentType].get();
+	}
+
+	b2World& Field::getBox2DWorld() {
+		return m_box2DWorld;
+	}
 }
